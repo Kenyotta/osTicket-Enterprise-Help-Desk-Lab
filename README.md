@@ -1,74 +1,126 @@
 # osticket-helpdesk-lab
-This project documents the deployment of a full osTicket-based IT Service Desk on an Ubuntu Linux server using Apache, MySQL, and PHP.  The goal was to simulate a real-world IT support environment used in enterprise service desks.
+osTicket Help Desk + Email-to-Ticket SOC Lab (Ubuntu 22.04 + Gmail IMAP)
 
- osTicket Helpdesk Lab Deployment
- Project Overview
+       Project Overview
 
-This project documents the deployment of a full osTicket-based IT Service Desk on an Ubuntu Linux server using Apache, MySQL, and PHP.
+This project is a self-hosted IT help desk built using osTicket v1.18.1 on an Ubuntu 22.04 server. It simulates a real-world service desk environment and is being extended into a SOC-style lab with email ingestion, ticket automation, and future SIEM integration.
 
-The goal was to simulate a real-world IT support environment used in enterprise service desks.
+The goal is to practice:
 
-Technology Stack
+IT support workflows
+Ticket lifecycle management
+Email ingestion via IMAP (Gmail)
+Linux server administration
+Cron automation
+Debugging production-style service issues
 
-Ubuntu Server
-Apache2 Web Server
-MySQL Database
-PHP 8.x
-osTicket v1.18.1
-
-Installation Steps
-
-1. System Update
-sudo apt update && sudo apt upgrade -y
-2. Install Apache, MySQL, PHP
-sudo apt install apache2 mysql-server php libapache2-mod-php php-mysql -y
-3. Install Required PHP Extensions
-sudo apt install php-imap php-xml php-mbstring php-intl php-apcu -y
-4. Deploy osTicket
-Downloaded osTicket
-Extracted to:
-/var/www/html/osticket
-5. Database Setup
-Created MySQL database:
-osticket
-Configured root access for application
-6. Web Installation
-
-Accessed:
-
-http://server-ip/osticket/setup
-
-Completed:
-
-Admin account creation
-Database connection
-System configuration
-
- Security Steps
+      Architecture
  
-Removed setup directory after installation:
-sudo rm -rf /var/www/html/osticket/setup
-Set correct file permissions:
-sudo chmod 0644 include/ost-config.php
+User Email (Gmail IMAP)
+        ↓
+osTicket Mail Fetcher (IMAP 993)
+        ↓
+Apache Web Server (Ubuntu 22.04)
+        ↓
+PHP 8.1 + osTicket v1.18.1
+        ↓
+MySQL 8.0 Database (osticket schema)
+        ↓
+Ticket Storage + Agent Dashboard
 
-Features Implemented
+    Tech Stack
 
-Ticket creation system
-Admin/staff dashboard
-User portal
-MySQL-backed ticket storage
+Ubuntu Server 22.04 (Oracle VM)
+Apache 2.4
+PHP 8.1
+MySQL 8.0
+osTicket v1.18.1
+Gmail IMAP (imap.gmail.com:993 SSL)
+Cron (system scheduler)
 
-Key Skills Learned
+   Email Configuration
+ 
+Email Account: Gmail (IMAP)
+Host: imap.gmail.com
+Port: 993
+Protocol: IMAP SSL
+Auth Type: Basic Authentication (App Password recommended)
+Fetch Interval: 5 minutes
+Folder: INBOX
 
-Linux file system navigation
-Apache web hosting
-MySQL database configuration
-PHP web application deployment
-Troubleshooting server permissions
+   Cron Configuration
 
-Challenges Faced
+System cron is configured to run osTicket tasks:
 
-File permission errors (403 Forbidden)
-MySQL authentication issues
-osTicket installation validation errors
-PHP dependency resolution
+*/2 * * * * /home/ubuntu/siem_watch.sh
+*/5 * * * * php /var/www/html/osticket/api/cron.php
+
+   Cron service status:
+Active and running 
+Executes successfully 
+
+    System Validation
+
+Database:
+MySQL running 
+Tickets being created 
+Web Server:
+Apache operational 
+SCP interface accessible 
+Email Fetching:
+IMAP connection verified  (Gmail TLS handshake successful)
+Mail fetch pipeline currently not executing 
+
+      Observed Issue
+Email-to-Ticket Not Triggering
+Despite valid configuration:
+
+Email account is active
+IMAP connection succeeds
+Cron executes without errors
+
+    However:
+
+No email logs generated
+No tickets created from email
+MailFetcher does not appear to execute during cron run
+
+   Troubleshooting Summary
+
+ Completed steps:
+
+Verified Gmail IMAP connectivity via openssl s_client
+Confirmed cron execution
+Verified database schema and email account configuration
+Confirmed PHP IMAP extension installed
+Tested manual cron execution (no output)
+Confirmed tickets are being created via manual sources (Phone)
+
+       Current Status
+Apache	 Working
+MySQL	Working
+osTicket UI	 Working
+Ticket Creation	 Working
+Cron Jobs	 Running
+Gmail IMAP	 Connected
+Email Fetching	 Not executing
+MailFetcher	 Not triggered
+    
+    Next Steps (Planned)
+Fix MailFetcher execution flow
+Validate osTicket cron task routing
+Confirm email pipeline triggers
+Integrate logging for email ingestion
+Prepare SIEM forwarding (future phase)
+Add forensic logging dashboard
+
+   Learning Outcomes
+Linux server setup and service debugging
+IMAP email integration concepts
+Cron automation behavior in Linux
+PHP-based application debugging
+MySQL schema inspection
+Real-world help desk architecture design
+
+     Project Status
+Partially operational — core help desk works, email ingestion layer under investigation
