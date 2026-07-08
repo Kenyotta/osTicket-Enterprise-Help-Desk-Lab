@@ -325,3 +325,17 @@ The core infrastructure for the osTicket Enterprise Help Desk Lab has been succe
 * Additional automation and scripting
 
 This repository will continue to be updated as new features are implemented and additional enterprise technologies are integrated into the lab.
+
+Lessons Learned
+
+Building this lab provided valuable hands-on experience beyond simply installing software. Throughout the deployment, I strengthened my understanding of Linux system administration, web application hosting, database management, and structured troubleshooting.
+
+Some of the key takeaways from this project include:
+
+- Planning the deployment before making configuration changes helps reduce troubleshooting time.
+- Reading system logs and validating services step by step is more effective than guessing at solutions.
+- Proper documentation makes it easier to reproduce deployments and resolve future issues.
+- Enterprise applications depend on multiple services working together, including the operating system, web server, database, scheduled tasks, and network configuration.
+- Not every issue has an immediate solution. Investigating, documenting findings, and testing different approaches are essential parts of real-world IT support.
+
+This project reinforced the importance of methodical troubleshooting, documentation, and continuous learning—skills that are fundamental to both IT support and cybersecurity roles.
